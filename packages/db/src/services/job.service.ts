@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client';
 import { prisma } from '../client.js';
 
 const JOB_WITH_RESULT = {
@@ -74,7 +75,7 @@ export async function markFailed(jobId: string) {
 }
 
 export async function retryJob(jobId: string, userId: string) {
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const job = await tx.job.findFirst({
       where: { id: jobId, userId, status: 'FAILED' },
     });
