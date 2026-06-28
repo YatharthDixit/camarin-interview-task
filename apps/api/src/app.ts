@@ -59,7 +59,7 @@ export function createApp() {
 
   // Serve frontend in production
   if (env.NODE_ENV === 'production') {
-    const webDist = path.resolve(__dirname, '../../../web/dist');
+    const webDist = path.resolve(__dirname, '../../web/dist');
     app.use(express.static(webDist));
     // SPA fallback — any non-API route serves index.html
     app.get('*', (_req, res) => {
