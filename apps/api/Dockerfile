@@ -51,13 +51,15 @@ COPY package.json package-lock.json ./
 COPY packages/db/package.json packages/db/
 COPY apps/api/package.json apps/api/
 
+# Copy Prisma schema before generating
+COPY packages/db/prisma packages/db/prisma/
+
 # Install production dependencies only
 RUN npm ci --omit=dev --ignore-scripts
 RUN npx prisma generate --schema=packages/db/prisma/schema.prisma
 
 # Copy built artifacts
 COPY --from=builder /app/packages/db/dist packages/db/dist/
-COPY --from=builder /app/packages/db/prisma packages/db/prisma/
 COPY --from=builder /app/apps/api/dist apps/api/dist/
 COPY --from=builder /app/apps/web/dist apps/web/dist/
 
