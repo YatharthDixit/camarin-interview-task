@@ -1,0 +1,25 @@
+{
+  "name": "@camarin/worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@camarin/db": "*",
+    "@huggingface/inference": "^4.13.20",
+    "bullmq": "^5.8.0",
+    "dotenv": "^17.4.2",
+    "ioredis": "^5.4.0",
+    "pino": "^9.2.0",
+    "sharp": "^0.33.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.15.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "camarin",
+  "type": "module",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "dev": "npx concurrently -n api,worker,web -c cyan,yellow,magenta \"npm run dev -w apps/api\" \"npm run dev -w apps/worker\" \"npm run dev -w apps/web\"",
+    "build": "npm run build --workspaces --if-present",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc -b tsconfig.json"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@types/node": "^22.0.0",
+    "@types/supertest": "^6.0.0",
+    "eslint": "^9.0.0",
+    "supertest": "^7.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0",
+    "@vitest/coverage-v8": "^2.0.0"
+  }
+}

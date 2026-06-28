@@ -1,0 +1,35 @@
+services:
+  api:
+    image: ghcr.io/${GITHUB_REPO:-camarin}-api:latest
+    restart: unless-stopped
+    mem_limit: 512m
+    env_file: .env
+    ports:
+      - "127.0.0.1:4000:3000"
+    depends_on: [postgres, redis]
+
+  worker:
+    image: ghcr.io/${GITHUB_REPO:-camarin}-worker:latest
+    restart: unless-stopped
+    mem_limit: 2g
+    env_file: .env
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=1536
+      - BLIP_FALLBACK_MAX_CONCURRENT=2
+    depends_on: [postgres, redis]
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    mem_limit: 1g
+    env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    mem_limit: 512m
+
+volumes:
+  pgdata:

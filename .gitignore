@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+.env.local
+secrets/
+*.pem
+*.key
+
+# Prisma
+prisma/migrations/*.sql
+
+# Logs
+*.log
+pino-pretty.log
+
+# Build artifacts
+apps/web/dist/
