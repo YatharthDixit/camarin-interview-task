@@ -5,6 +5,7 @@ import {
   findJobForUser,
   listJobsForUser,
   retryJob,
+  type JobListFilter,
 } from '@camarin/db';
 import { uploadToR2, getPresignedUrl } from '../services/storage.service.js';
 import { imageProcessingQueue, redisConnection } from '../lib/queue.js';
@@ -40,7 +41,7 @@ export const list = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user!.id;
   const { cursor, limit, search, status, flagged } = req.query as unknown as JobListQuery;
 
-  const filter: import('@camarin/db').JobListFilter = {};
+  const filter: JobListFilter = {};
   if (search) filter.search = search;
   if (status) filter.status = status;
   if (flagged !== undefined) filter.flagged = flagged;
