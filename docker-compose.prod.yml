@@ -1,6 +1,6 @@
 services:
   api:
-    image: ghcr.io/${GITHUB_REPO:-camarin}-api:latest
+    image: ghcr.io/yatharthdixit/camarin-interview-task-api:latest
     restart: unless-stopped
     mem_limit: 512m
     env_file: .env
@@ -9,7 +9,7 @@ services:
     depends_on: [postgres, redis]
 
   worker:
-    image: ghcr.io/${GITHUB_REPO:-camarin}-worker:latest
+    image: ghcr.io/yatharthdixit/camarin-interview-task-worker:latest
     restart: unless-stopped
     mem_limit: 2g
     env_file: .env
