@@ -28,14 +28,14 @@ Users upload an image, get a Job ID back immediately, and watch their results ar
 **Prerequisites:** Docker Desktop (or Docker Engine + Compose v2). Nothing else required on the host.
 
 ```bash
-# 1. Clone
-git clone <repo-url> && cd camarin
+# 1. Clone the repository
+git clone https://github.com/YatharthDixit/camarin-interview-task.git && cd camarin-interview-task
 
-# 2. Create .env from the example and fill in your API keys
-#    (see "Obtaining API Keys" below — all free tier)
-cp .env.example .env
+# 2. Add your environment variables
+# Copy the `.env` file provided in the email and place it in the root directory.
+# This contains all the necessary API keys to review the app.
 
-# 3. Start everything — builds images, runs migrations, starts all services
+# 3. Start the application (builds images, runs migrations, starts services)
 docker compose up --build
 ```
 
@@ -79,40 +79,9 @@ The Vite dev server proxies `/api` to `http://localhost:3000` so there are no CO
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` and fill in each value. All external services have free tiers.
+Copy the `.env` file provided in the email and place it in the root directory. It contains all the required API keys and configuration to run the application seamlessly.
 
-```bash
-# PostgreSQL — Docker sets these up automatically from the same .env
-DATABASE_URL=postgresql://camarin:changeme@localhost:5432/camarin
-POSTGRES_USER=camarin
-POSTGRES_PASSWORD=changeme
-POSTGRES_DB=camarin
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# JWT — generate a strong secret with:  openssl rand -base64 64
-JWT_SECRET=
-JWT_ACCESS_EXPIRY=15m
-JWT_REFRESH_EXPIRY=30d
-
-# Cloudflare R2
-R2_ACCOUNT_ID=
-R2_ACCESS_KEY_ID=
-R2_SECRET_ACCESS_KEY=
-R2_BUCKET=camarin-uploads
-R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
-
-# Hugging Face
-HF_API_KEY=
-
-# Google Cloud Vision (API key, not a service account — simpler for local use)
-GOOGLE_VISION_API_KEY=
-
-# App
-NODE_ENV=development
-PORT=3000
-```
+If you are setting this up from scratch, refer to `.env.example` for the required variables:
 
 | Variable | Used by | Required |
 |----------|---------|----------|
@@ -126,32 +95,25 @@ PORT=3000
 | `HF_API_KEY` | Worker only | Yes |
 | `GOOGLE_VISION_API_KEY` | Worker only | Yes |
 
-Both the API and worker validate their own required variables at boot using Zod and crash immediately with a clear error message if anything is missing — no silent failures.
+Both the API and worker validate their required variables on startup. They will crash with a clear error message if anything is missing, preventing silent failures.
 
 ---
 
 ## Obtaining API Keys
 
+*(Note: You can skip this section if you use the `.env` provided in the email.)*
+
 ### Hugging Face (free)
 1. Create an account at [huggingface.co](https://huggingface.co)
-2. Go to **Settings → Access Tokens**
-3. Create a token with **"Make calls to Inference Providers"** permission enabled
-4. Copy the token as `HF_API_KEY`
+2. Generate an Access Token with **"Make calls to Inference Providers"** permissions.
 
-### Google Cloud Vision (free tier — 1,000 requests/month)
-1. Create a project at [console.cloud.google.com](https://console.cloud.google.com)
-2. Enable the **Cloud Vision API** for the project
-3. Go to **APIs & Services → Credentials → Create Credentials → API Key**
-4. Copy the key as `GOOGLE_VISION_API_KEY`
-5. (Recommended) Restrict the key to the Cloud Vision API only
+### Google Cloud Vision (free tier)
+1. Enable the **Cloud Vision API** in your Google Cloud Console.
+2. Create an API Key in the Credentials section.
 
-### Cloudflare R2 (free tier — 10 GB storage, 10M reads/month, zero egress)
-1. Sign into [dash.cloudflare.com](https://dash.cloudflare.com) (requires a card on file to activate R2, but the free tier is genuinely free)
-2. Go to **R2 Object Storage → Create bucket**, name it `camarin-uploads`
-3. In the bucket settings, note your **Account ID**
-4. Go to **Manage R2 API Tokens → Create API Token** with **Object Read & Write** on this bucket
-5. Copy the Access Key ID and Secret Access Key
-6. Set `R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com`
+### Cloudflare R2 (free tier)
+1. Create an R2 bucket named `camarin-uploads` in the Cloudflare Dashboard.
+2. Generate an R2 API Token with **Object Read & Write** permissions.
 
 ---
 
@@ -234,15 +196,16 @@ camarin/
 │   │   │   ├── providers/      # google-vision.ts, huggingface.ts
 │   │   │   ├── fallback/       # pool.ts — label-based caption fallback
 │   │   │   ├── lib/            # env, logger (job-scoped), r2, resize, publisher
-│   │   │   └── processor.ts    # Main job handler
+│   │   │   ├── pipeline.ts     # Main AI processing logic
+│   │   │   └── processor.ts    # Job lifecycle and routing
 │   │   └── Dockerfile
 │   │
 │   └── web/                    # React + Vite SPA
 │       └── src/
 │           ├── pages/          # Dashboard, JobDetail, Login, Signup
-│           ├── components/     # JobCard, UploadZone, StatusBadge, Toast, Navbar
+│           ├── components/     # UI components (JobCard, UploadZone, etc.)
 │           ├── contexts/       # AuthContext
-│           ├── hooks/          # useJobStream (SSE)
+│           ├── hooks/          # Custom hooks (useJobStream, useFileUpload, etc.)
 │           └── api/            # client.ts (typed API client)
 │
 ├── packages/
