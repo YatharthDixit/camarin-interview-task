@@ -6,6 +6,19 @@ Users upload an image, get a Job ID back immediately, and watch their results ar
 
 ---
 
+## 🚀 Live Deployment
+
+The application is deployed and live at: **[https://camarin.yath.dev](https://camarin.yath.dev)**
+
+This project has been fully upgraded to a **production-ready architecture**:
+- **CI/CD Pipeline**: GitHub Actions automatically builds multi-stage Docker images on every push, pushes them to GitHub Container Registry (GHCR), and securely deploys them to a remote VPS via SSH.
+- **Production VPS Setup**: Hosted on an isolated VPS utilizing Docker Compose for orchestration.
+- **Reverse Proxy**: Nginx handles SSL termination (Certbot) and routes traffic to the API container, with custom headers perfectly tuned for Server-Sent Events (SSE).
+- **Monorepo Migration**: The codebase was heavily refactored into a scalable NPM Workspaces monorepo (`apps/api`, `apps/worker`, `apps/web`, `packages/db`), ensuring strong boundaries and type-sharing.
+- **Dockerized**: Containerized down to lightweight Alpine Linux images running as non-root users for maximum security.
+
+---
+
 ## Table of Contents
 
 1. [Quick Start for Reviewers](#quick-start-for-reviewers)
