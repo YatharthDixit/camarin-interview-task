@@ -17,6 +17,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export function createApp() {
   const app = express();
 
+  // Trust nginx (one proxy hop) so express-rate-limit uses the real client IP
+  app.set('trust proxy', 1);
+
   // Security — first middleware, before any route
   app.use(
     helmet({
